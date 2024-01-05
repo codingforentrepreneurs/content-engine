@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BASE_DIR: ${{ secrets.BASE_DIR || 'src/' }}
-      # Default to 'heroku/buildpacks:22' if BUILDPACK_BUILDER secret is not set.
+      # Default to 'heroku/buildpacks' if BUILDPACK_BUILDER secret is not set.
       # https://devcenter.heroku.com/articles/stack#stack-support-details
-      BUILDPACK_BUILDER: ${{ secrets.BUILDPACK_BUILDER || 'heroku/buildpacks:22' }}
+      BUILDPACK_BUILDER: ${{ secrets.BUILDPACK_BUILDER || 'heroku/buildpacks' }}
       # Docker Image Tag, default to GitHub sha if not set
       DOCKER_HUB_IMAGE_TAG: ${{ secrets.DOCKER_HUB_IMAGE_TAG || github.sha }}
       # Default DOCKER_REPO to GitHub's username/repository if not provided as a secret
