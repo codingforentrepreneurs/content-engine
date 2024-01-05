@@ -1,8 +1,0 @@
-{   
-    "env": {
-        "DISABLE_COLLECTSTATIC": {
-            "description": "Disable Django's collectstatic During Build Phase",
-            "value": "1"
-        }
-    }   
-}

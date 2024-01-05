@@ -1,0 +1,2 @@
+[[build.env]]
+DISABLE_COLLECTSTATIC="1"
