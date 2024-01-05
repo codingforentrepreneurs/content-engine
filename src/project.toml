@@ -8,4 +8,4 @@ value = "3.11.7"
 
 [[build.env]]
 name = "GOOGLE_ENTRYPOINT"
-value = "web: gunicorn cfehome.wsgi:application --bind \"0.0.0.0:$PORT\""
+value = "gunicorn cfehome.wsgi:application --bind \"0.0.0.0:$PORT\""
