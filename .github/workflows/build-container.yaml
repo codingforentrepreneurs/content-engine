@@ -14,7 +14,7 @@ jobs:
     env:
       BASE_DIR: ${{ secrets.BASE_DIR || 'src/' }}
       # Turn off collect static by default
-      COLLECTSTATIC: ${{ secrets.COLLECTSTATIC || 'heroku/builder:22' }}
+      COLLECTSTATIC: ${{ secrets.COLLECTSTATIC || 0 }}
       # Default to 'heroku/builder:22' if BUILDPACK_BUILDER secret is not set.
       # https://devcenter.heroku.com/articles/stack#stack-support-details
       BUILDPACK_BUILDER: ${{ secrets.BUILDPACK_BUILDER || 'heroku/builder:22' }}
