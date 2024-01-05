@@ -47,8 +47,9 @@ This files are needed to ensure the project runs correctly, review `src/` for wo
 
 `Profile`
 ```
-web: gunicorn myproject.wsgi --log-file -
+web: gunicorn myproject.wsgi:application --bind "0.0.0.0:$PORT"
 ```
+IN this case `myproject` is the name of the Django configuration folder where `wsgi.py` is located and `application` is the variable within the `wsi.py` file.
 
 `runtime.txt`
 ```
