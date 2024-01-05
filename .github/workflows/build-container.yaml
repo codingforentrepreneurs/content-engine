@@ -31,9 +31,10 @@ jobs:
 
     - name: Build app using Buildpacks
       run: |
+        export DISABLE_COLLECTSTATIC=1
         pack build ${{ env.DOCKER_HUB_REPO }}:${{ env.DOCKER_HUB_IMAGE_TAG }} \
           --path ${{ env.BASE_DIR }} \
-          --env "DISABLE_COLLECTSTATIC=${{ env.DISABLE_COLLECTSTATIC }}" \
+          --env "DISABLE_COLLECTSTATIC=1 \
           --builder ${{ env.BUILDPACK_BUILDER }}
 
     - name: Login to Docker Hub
