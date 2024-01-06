@@ -40,21 +40,27 @@ If you need more advanced usage, consider adding these secrets to modify how you
 
 In my `BASE_DIR` (defaults to `src/`), I have the following files:
 - requirements.txt
-- runtime.txt
-- Procfile
+- project.toml
 
-This files are needed to ensure the project runs correctly, review `src/` for working examples or use the following samples:
+
+This files are needed to ensure the auto-container workflow runs correctly, review `src/` for working examples or use the following samples:
 
 `Profile`
-```
-web: gunicorn myproject.wsgi:application --bind "0.0.0.0:$PORT"
-```
-IN this case `myproject` is the name of the Django configuration folder where `wsgi.py` is located and `application` is the variable within the `wsi.py` file.
+```toml
+[[build.env]]
+name = "DISABLE_COLLECTSTATIC"
+value = "1"
 
-`runtime.txt`
+[[build.env]]
+name =  "GOOGLE_RUNTIME_VERSION"
+value = "3.11.7"
+
+[[build.env]]
+name = "GOOGLE_ENTRYPOINT"
+value = "gunicorn cfehome.wsgi:application --bind \"0.0.0.0:$PORT\""
 ```
-python-3.12.1
-```
+The `GOOGLE_ENTRYPOINT` is the command that will be run when the container is started. In this case, it's the production version of running `python manage.py runserver` but with `gunicorn` instead of `runserver`.
+
 
 `requirements.txt`
 ```
