@@ -13,7 +13,8 @@ The purpose of this repo is to help Django devs use containers without having to
 Navigate to your Django project directory and copy the build container workflow from this repository.
 
 ```bash
-curl https://raw.githubusercontent.com/codingforentrepreneurs/django-auto-container/main/.github/workflows/build-container.yml > .github/workflows/build-container.yml
+mkdir -p .github/workflows
+curl https://raw.githubusercontent.com/codingforentrepreneurs/django-auto-container/main/.github/workflows/build-container.yaml > .github/workflows/build-container.yaml
 ```
 
 ### 2. Github Actions Secrets
