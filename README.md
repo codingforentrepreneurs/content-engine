@@ -39,13 +39,12 @@ If you need more advanced usage, consider adding these secrets to modify how you
 ### 3. Required Files
 
 In my `BASE_DIR` (defaults to `src/`), I have the following files:
-- requirements.txt
 - project.toml
-
+- requirements.txt
 
 This files are needed to ensure the auto-container workflow runs correctly, review `src/` for working examples or use the following samples:
 
-`Profile`
+`project.toml`
 ```toml
 [[build.env]]
 name = "DISABLE_COLLECTSTATIC"
@@ -69,3 +68,22 @@ gunicorn
 ```
 `gunicorn` is required as it's what is recommended to run Django in production.
 
+### 4. Push
+
+Push your code to GitHub and watch the magic happen. You can view the workflow in the "Actions" tab of your GitHub repo.
+
+### 5. Run
+
+If you have Docker installed locally, you can run your application with:
+
+```
+docker run -e PORT=8888 -p 8888:8888 <your-docker-hub-username>/<your-docker-hub-repo>:<your-docker-hub-image-tag>
+```
+Open [http://localhost:8888](http://localhost:8888) to view your application.
+
+If you don't have Docker installed locally, you can run your application on any container host such as:
+
+- Kubernetes
+- Knative
+- Hashicorp Nomad
+- Any managed container hosting service
