@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.osx": {
+			"KUBECONFIG": "${workspaceFolder}/.kube/kubeconfig.yaml"
+		}
+	}
+}
