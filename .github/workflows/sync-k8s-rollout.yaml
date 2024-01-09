@@ -17,6 +17,18 @@ jobs:
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+      - name: Setup K8s Secrets
+        run: |
+          export NEW_SECRET_VALUE=$(openssl rand -base64 32)
+          cat <<EOF > k8s/1-secret.yaml
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: content-engine-secret
+          stringData:
+            SECRET_KEY: $NEW_SECRET_VALUE
+            DJANGO_DEBUG: "0"
+          EOF
       - name: Apply K8s Manifests
         run: |
           kubectl apply -f k8s/
