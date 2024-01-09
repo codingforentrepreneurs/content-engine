@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-5-6%*^4@bo%xlzad%sv4ncwx_$2nhb=wj#52=8x7tkeg4bgy!g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # twingate
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "landing",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = "cfehome.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
