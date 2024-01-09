@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-configmap
+data:
+  PORT: "8080"
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: content-engine-configmap
+data:
+  WELCOME_MSG: "Welcome to content engine!"
