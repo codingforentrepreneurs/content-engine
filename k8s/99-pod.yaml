@@ -1,27 +1,27 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: content-engine-poda
-  labels:
-    app: web
-spec:
-  containers:
-    - name: my-container
-      # docker pull jmitchel3/content-engine:latest
-      image: jmitchel3/content-engine:latest
-      env:
-        - name: PORT
-          value: "8080"
-        - name: WELCOME_MSG
-          valueFrom:
-            configMapKeyRef:
-              name: content-engine-configmap
-              key:  WELCOME_MSG
-      # envFrom:
-      #   - configMapRef:
-      #       name: django-configmap
-      envFrom:
-        - secretRef:
-            name: content-engine-secret
-      ports:
-        - containerPort: 8080
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: content-engine-poda
+#   labels:
+#     app: web
+# spec:
+#   containers:
+#     - name: my-container
+#       # docker pull jmitchel3/content-engine:latest
+#       image: jmitchel3/content-engine:latest
+#       env:
+#         - name: PORT
+#           value: "8080"
+#         - name: WELCOME_MSG
+#           valueFrom:
+#             configMapKeyRef:
+#               name: content-engine-configmap
+#               key:  WELCOME_MSG
+#       # envFrom:
+#       #   - configMapRef:
+#       #       name: django-configmap
+#       envFrom:
+#         - secretRef:
+#             name: content-engine-secret
+#       ports:
+#         - containerPort: 8080
