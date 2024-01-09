@@ -1,6 +1,7 @@
 .DS_Store
 .kube/kubeconfig.yaml
 k8s/*secret.yaml
+k8s/dbs/secret.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

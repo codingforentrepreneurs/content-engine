@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: db-container
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres-port
+              containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres
+          volumeMounts:
+            - name: postgres-db-vol
+              mountPath: /var/lib/postgresql/data
+      initContainers:
+        - name: delete-existing-data
+          image: alpine:latest
+          command: ["sh", "-c", "rm -rf /mnt/*"]
+          volumeMounts:
+            - name: postgres-db-vol
+              mountPath: /mnt
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-db-vol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "linode-block-storage-retain"
+        resources:
+          requests:
+            storage: 120G
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  type: ClusterIP # 
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: postgres-port
+  selector:
+    app: postgres
+
