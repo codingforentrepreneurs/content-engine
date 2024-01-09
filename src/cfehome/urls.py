@@ -21,5 +21,6 @@ from landing import views as landing_views
 
 urlpatterns = [
     path("",    landing_views.home_page_view),
+    path("err",    landing_views.server_error_page),
     path("admin/", admin.site.urls),
 ]
