@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-engine
+spec:
+  selector:
+    app: web
+  type: LoadBalancer # -> Node Balancer
+  # type: NodePort # public ip -> attached to the vm
+  # type: ClusterIp # private service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80 # mydomain.com -> mydomain.com:80
+      targetPort: 8080
