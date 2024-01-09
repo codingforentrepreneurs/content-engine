@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: content-engine-poda
+spec:
+  containers:
+    - name: my-container
+      # docker pull jmitchel3/content-engine:latest
+      image: jmitchel3/content-engine:latest
+      env:
+        - name: PORT
+          value: "8080"
+        - name: WELCOME_MSG
+          value: "Welcome to content engine!"
+      ports:
+        - containerPort: 8080
