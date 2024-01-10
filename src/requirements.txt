@@ -1,3 +1,6 @@
 Django>=4.2,<4.3
 gunicorn
 python-decouple
+dj-database-url
+# psycopg2 # os-level installs
+psycopg2-binary
