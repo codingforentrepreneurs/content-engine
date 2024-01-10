@@ -1,6 +1,7 @@
 .DS_Store
 .kube/kubeconfig.yaml
 k8s/*secret.yaml
+src/static-root/
 k8s/dbs/secret.yaml
 
 # Byte-compiled / optimized / DLL files
