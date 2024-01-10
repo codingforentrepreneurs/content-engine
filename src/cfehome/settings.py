@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 # import os
+from .env import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-5-6%*^4@bo%xlzad%sv4ncwx_$2nhb=wj#52=8x7tkeg4bgy!g"
+# os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY", default=None, cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # twingate
+DEBUG = config("DJANGO_DEBUG", default=False, cast=bool) # twingate
 
 ALLOWED_HOSTS = ["*"]
 
@@ -80,7 +82,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
