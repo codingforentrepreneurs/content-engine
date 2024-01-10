@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from projects.models import Project
+from projects.models import Project, AnonymousProject
 
 def delete_project_from_session(request):
     try:
