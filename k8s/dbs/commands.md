@@ -1,5 +1,5 @@
 
-Path: `postgres://username@pgpassword:db.default.svc.cluster.local/dbname`
+Path: `postgres://username:pgpassword@db.default.svc.cluster.local:5432/dbname`
 
 Using kubectl port-forward
 ```bash
