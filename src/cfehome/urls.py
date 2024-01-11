@@ -23,6 +23,7 @@ from projects import views as projects_views
 urlpatterns = [
     path("",    landing_views.home_page_view),
     path("items/", include('items.urls')),
+    path("projects/", include('projects.urls')),
     path("about/",    landing_views.about_page_view),
     path("activate/project/<slug:handle>/", 
           projects_views.activate_project_view),
