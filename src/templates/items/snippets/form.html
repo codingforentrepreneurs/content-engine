@@ -1,0 +1,8 @@
+<form class="tw-form" method="post" action="">{% csrf_token %}
+
+    {{ form.as_div }}
+    <div>
+        <button type="submit">{% if btn_label %}{{ btn_label }}{% else %}Submit{% endif %}</button>
+    </div>
+
+</form>

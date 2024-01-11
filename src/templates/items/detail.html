@@ -3,6 +3,9 @@
 
 {% block content %}
 
-{{ instance }}
+<h1>{{ instance.title }}</h1>
+
+
+{% include 'items/snippets/form.html' with form=form btn_label="Save" %}
 
 {% endblock content %}
