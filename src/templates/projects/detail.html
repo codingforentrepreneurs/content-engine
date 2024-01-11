@@ -11,8 +11,8 @@
 
     {% else %}
     <div>
-        <p>Activate project to continue.</p>
-        </div>
+        <a href="{{ instance.get_activation_url }}">Activate Project</a>
+    </div>
 {% endif %}
 
 {% include 'projects/snippets/form.html' with form=form btn_label="Save" %}
