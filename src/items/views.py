@@ -1,8 +1,19 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .forms import ItemForm
 from .models import Item
+
+@login_required
+def item_list_view(request):
+    object_list = Item.objects.filter(project=request.project)
+    return render(request, "items/list.html", {'object_list': object_list})
+
+@login_required
+def item_detail_view(request, id=None):
+    instance = get_object_or_404(Item, id=id, project=request.project)
+    return render(request, "items/detail.html", {'instance': instance})
+
 
 # @project_required
 @login_required

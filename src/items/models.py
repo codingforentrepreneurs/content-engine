@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse # django-hosts
 from projects.models import Project
 
 User = settings.AUTH_USER_MODEL
@@ -21,3 +22,7 @@ class Item(models.Model):
         if self.added_by:
             self.added_by_username= self.added_by.username
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        # return f"/items/{self.id}/"
+        return reverse("items:detail", kwargs={"id": self.id})
