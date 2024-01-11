@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>Are you sure you want to delete {{ instance.title }}?</h1>
+
+
+{% include 'items/snippets/form.html' with btn_label="Yes, delete" delete=True %}
+
+{% endblock content %}
