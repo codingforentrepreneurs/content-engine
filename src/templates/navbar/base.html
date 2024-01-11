@@ -1,0 +1,5 @@
+{% if request.user.is_authenticated %}
+{% include 'navbar/logged_in.html' %}
+{% else %}
+{% include 'navbar/guest.html' %}
+{% endif %}
