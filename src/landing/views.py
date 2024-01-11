@@ -1,9 +1,12 @@
 from django.shortcuts import render
-
+from items.models import Item
 # Create your views here.
+
 def home_page_view(request):
-    print(request.project.is_activated)
-    return render(request, "landing/home.html", {})
+    if not request.user.is_authenticated:
+        return render(request, "landing/home.html", {})
+    qs = Item.objects.filter(project=request.project)
+    return render(request, "dashboard/home.html", {"items": qs})
 
 def about_page_view(request):
     print(request.project)

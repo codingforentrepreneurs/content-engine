@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+{% include 'items/table.html' with items=items %}
+<a href="{{ item_create_url }}">Create new</a>
+
+{% endblock %}
