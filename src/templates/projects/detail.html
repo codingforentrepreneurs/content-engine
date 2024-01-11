@@ -6,6 +6,15 @@
 <h1>{{ instance.title }}</h1>
 
 
+{% if request.project == instance %}
+    {% include 'projects/snippets/list.html' with object_list=items_qs %}
+
+    {% else %}
+    <div>
+        <p>Activate project to continue.</p>
+        </div>
+{% endif %}
+
 {% include 'projects/snippets/form.html' with form=form btn_label="Save" %}
 
 {% endblock content %}

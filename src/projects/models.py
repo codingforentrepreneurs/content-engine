@@ -25,6 +25,9 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse("projects:detail", kwargs={"handle": self.handle})
+    
+    def get_delete_url(self):
+        return reverse("projects:delete", kwargs={"handle": self.handle})
 
     @property
     def is_activated(self):

@@ -11,6 +11,7 @@ module.exports = {
         "200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a","950":"#172554"},
       gray: colors.gray,
       red: colors.red,
+      green: colors.green,
       blue: colors.blue,
       white: colors.white,
       black: colors.black,
