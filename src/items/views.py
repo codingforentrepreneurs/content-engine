@@ -48,7 +48,6 @@ def item_create_view(request):
         item_obj.project = request.project
         item_obj.added_by = request.user 
         item_obj.save()
-        projects_cache.get_user_projects(request.user.username)
         return redirect(item_obj.get_absolute_url())
     context = {
         "form": form
