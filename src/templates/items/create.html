@@ -4,11 +4,12 @@
 {% block content %}
 
 <h1>Create new item for {{ request.project.title }}</h1>
-<form method="post" action="">{% csrf_token %}
+<form class="tw-form" method="post" action="">{% csrf_token %}
 
-    {{ form.as_p }}
-    
-    <button type="submit">Create</button>
+    {{ form.as_div }}
+    <div>
+        <button type="submit">Create</button>
+    </div>
 
 </form>
 
