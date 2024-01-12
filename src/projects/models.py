@@ -23,6 +23,9 @@ class Project(models.Model):
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
+    def __str__(self):
+        return self.handle
+
     def get_absolute_url(self):
         return reverse("projects:detail", kwargs={"handle": self.handle})
     

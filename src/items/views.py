@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 
 from projects import cache as projects_cache
-from django_htmx.http import HttpResponseClientRefresh, HttpResponseClientRedirect
+from django.http import HttpResponse
+from django_htmx.http import trigger_client_event
 from projects.decorators import project_required
 
 from . import forms
@@ -56,7 +57,9 @@ def item_create_view(request):
         item_obj.added_by = request.user 
         item_obj.save()
         if request.htmx:
-            return HttpResponseClientRefresh()
+            custom_refresh_event = "refresh-list-view"
+            response = HttpResponse("")
+            return trigger_client_event(response,custom_refresh_event)
         return redirect(item_obj.get_absolute_url())
     action_create_url = reverse("items:create")
     context = {

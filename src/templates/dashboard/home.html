@@ -4,13 +4,12 @@
 {% block content %}
 
 <!-- REST API Request -->
-<div class="h-screen">
-    <div hx-get="{{ item_list_url }}" hx-trigger="load">
+<div class="h-screen space-y-4 px-4 mx-auto">
+    <button id="refresh-button" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Refresh</button>
+    
+    <div hx-get="{{ item_list_url }}" hx-trigger="load, click from:#refresh-button, refresh-list-view from:body">
         Loading ...
     </div>
-    <div id="item-create-container">
-        <button hx-target="#item-create-container" hx-swap="innerHTML" hx-get="{{ item_create_url }}" hx-trigger="click" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create new</button>
-    </div>
-
+ 
 </div>
 {% endblock %}
