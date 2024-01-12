@@ -1,4 +1,11 @@
-<form class="tw-form" method="post" {% if action_url %}action="{{ action_url }}"{% endif %}>{% csrf_token %}
+<form 
+    class="tw-form" 
+    method="post" 
+    {% if action_url %}
+        action="{{ action_url }}"
+        hx-post="{{ action_url }}"
+    {% endif %}>
+    {% csrf_token %}
     {% if form %}
         {{ form.as_div }}
     {% endif %}

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 
 from projects import cache as projects_cache
-from django_htmx.http import HttpResponseClientRefresh
+from django_htmx.http import HttpResponseClientRefresh, HttpResponseClientRedirect
 from projects.decorators import project_required
 
 from . import forms
@@ -56,7 +56,6 @@ def item_create_view(request):
         item_obj.added_by = request.user 
         item_obj.save()
         if request.htmx:
-            print("is htmx")
             return HttpResponseClientRefresh()
         return redirect(item_obj.get_absolute_url())
     action_create_url = reverse("items:create")
