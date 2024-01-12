@@ -16,5 +16,15 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js" defer></script>
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+    <script>
+         document.body.addEventListener('htmx:xhr:loadstart', function () {
+            document.body.classList.add('htmx-request');
+        });
+
+        document.body.addEventListener('htmx:xhr:loadend', function () {
+            document.body.classList.remove('htmx-request');
+        });
+    </script>
 </body>
 </html>

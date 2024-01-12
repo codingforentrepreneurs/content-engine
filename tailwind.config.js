@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin');
 
 module.exports = {
   content: [
@@ -65,5 +66,14 @@ module.exports = {
     extend: {},
   },
   
-  plugins: [require('flowbite/plugin')],
+  plugins: [
+    require('flowbite/plugin'),
+    plugin(function({ addVariant }) {
+      addVariant('htmx', ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) => {
+          return `.htmx-request .htmx\\:${className}`;
+        });
+      });
+    }),
+  ],
 }
