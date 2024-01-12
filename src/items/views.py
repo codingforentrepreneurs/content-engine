@@ -18,6 +18,29 @@ def item_list_view(request):
         template_name = "items/snippets/table.html"
     return render(request, template_name, {'object_list': object_list})
 
+
+@project_required
+@login_required
+def item_detail_inline_update_view(request, id=None):
+    instance = get_object_or_404(Item, id=id, project=request.project)
+    if not request.htmx:
+        detail_url = instance.get_absolute_url()
+        return redirect(detail_url)
+    template_name = "items/snippets/table-row-edit.html"
+    success_template = "items/snippets/table-row.html"
+    form = forms.ItemInlineForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        item_obj = form.save(commit=False)
+        item_obj.last_modified_by = request.user 
+        item_obj.save()
+        template_name = success_template
+    context = {
+        "instance": instance,
+        "form": form,
+    }
+    return render(request, template_name, context)
+
+
 @project_required
 @login_required
 def item_detail_update_view(request, id=None):

@@ -27,5 +27,9 @@ class Item(models.Model):
         # return f"/items/{self.id}/"
         return reverse("items:detail", kwargs={"id": self.id})
     
+    def get_edit_url(self):
+        # return f"/items/{self.id}/"
+        return reverse("items:edit", kwargs={"id": self.id})
+    
     def get_delete_url(self):
         return reverse("items:delete", kwargs={"id": self.id})

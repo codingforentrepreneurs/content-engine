@@ -24,23 +24,7 @@
         </thead>
         <tbody>
             {% for item in object_list %}
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ item.title }}
-                </th>
-                <td class="px-6 py-4">
-                    None
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.updated|timesince }} ago
-                </td>
-                <td class="px-6 py-4">
-                    <a href="{{ item.get_absolute_url }}">View</a>
-                    <button 
-                    hx-confirm="Are you sure you want to delete this?"
-                    hx-post="{{ item.get_delete_url }}">Delete</button>
-                </td>
-            </tr>
+                {% include 'items/snippets/table-row.html' with instance=item %}
             {% endfor %}
         </tbody>
     </table>

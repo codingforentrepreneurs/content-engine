@@ -1,0 +1,25 @@
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+    id="item-table-row-{{ instance.id }}"
+>
+    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+        {{ instance.title }}
+    </th>
+    <td class="px-6 py-4">
+        None
+    </td>
+    <td class="px-6 py-4">
+        {{ instance.updated|timesince }} ago
+    </td>
+    <td class="px-6 py-4">
+        <a href="{{ instance.get_absolute_url }}">View</a>
+
+        <button 
+        hx-swap="outerHTML"
+        hx-target="#item-table-row-{{ instance.id }}"
+        hx-get="{{ instance.get_edit_url }}">Edit</button>
+
+        <button 
+        hx-confirm="Are you sure you want to delete this?"
+        hx-post="{{ instance.get_delete_url }}">Delete</button>
+    </td>
+</tr>
