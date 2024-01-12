@@ -8,7 +8,7 @@
     <title>{% block head_title %}CFE Home{% endblock %}</title>
     {% include 'head/css.html' %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div>
         {% include 'navbar/base.html' %}
         {% include 'head/messages.html' %}

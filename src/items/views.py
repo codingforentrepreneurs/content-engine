@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 
 from projects import cache as projects_cache
-from django.http import HttpResponse
-from django_htmx.http import trigger_client_event
 from projects.decorators import project_required
+
+from cfehome import http
 
 from . import forms
 from .models import Item
@@ -40,6 +40,8 @@ def item_delete_view(request, id=None):
     instance = get_object_or_404(Item, id=id, project=request.project)
     if request.method == "POST":
         instance.delete()
+        if request.htmx:
+            return http.render_refresh_list_view(request)
         return redirect("items:list")
     return render(request, "items/delete.html", {"instance": instance})
 
@@ -57,9 +59,7 @@ def item_create_view(request):
         item_obj.added_by = request.user 
         item_obj.save()
         if request.htmx:
-            custom_refresh_event = "refresh-list-view"
-            response = HttpResponse("")
-            return trigger_client_event(response,custom_refresh_event)
+            return http.render_refresh_list_view(request)
         return redirect(item_obj.get_absolute_url())
     action_create_url = reverse("items:create")
     context = {

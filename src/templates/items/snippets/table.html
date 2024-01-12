@@ -1,6 +1,10 @@
 
 
-<div class="relative overflow-x-auto space-y-4">
+<div class="relative overflow-x-auto space-y-4"
+    hx-get="{{ item_list_url }}"
+    hx-swap="outerHTML"
+    hx-trigger="refresh-list-view from:body"
+>
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -32,6 +36,9 @@
                 </td>
                 <td class="px-6 py-4">
                     <a href="{{ item.get_absolute_url }}">View</a>
+                    <button 
+                    hx-confirm="Are you sure you want to delete this?"
+                    hx-post="{{ item.get_delete_url }}">Delete</button>
                 </td>
             </tr>
             {% endfor %}
