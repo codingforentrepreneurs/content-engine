@@ -3,8 +3,11 @@
 
 {% block content %}
 
-
-{% include 'items/table.html' with items=items %}
+<!-- REST API Request -->
+<div class="h-screen">
+    <div hx-get="{{ item_list_url }}" hx-trigger="load">
+        Loading ...
+    </div>
+</div>
 <a href="{{ item_create_url }}">Create new</a>
-
 {% endblock %}

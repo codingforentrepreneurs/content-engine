@@ -5,3 +5,4 @@ dj-database-url
 # psycopg2 # os-level installs
 psycopg2-binary
 whitenoise
+django-htmx

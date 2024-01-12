@@ -5,8 +5,7 @@ from projects.decorators import project_required
 
 @project_required
 def dashboard_view(request):
-    qs = Item.objects.filter(project=request.project)
-    return render(request, "dashboard/home.html", {"items": qs})
+    return render(request, "dashboard/home.html", {})
 
 def home_page_view(request):
     if not request.user.is_authenticated:

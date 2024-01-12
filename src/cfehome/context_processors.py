@@ -4,6 +4,7 @@ def site_urls(request):
     project_create_url = reverse("projects:create")
     project_list_url = reverse("projects:list")
     items_create_url = reverse("items:create")
+    item_list_url = reverse("items:list")
     deactivate_project_url = reverse("deactivate_project")
     return {
         "home_url": reverse("home"),
@@ -14,6 +15,8 @@ def site_urls(request):
         "projects_list_url": project_list_url,
         "item_create_url": items_create_url,
         "items_create_url": items_create_url,
+        "item_list_url": item_list_url,
+        "items_list_url": item_list_url,
         "deactivate_project_url": deactivate_project_url,
         "deactivate_url": deactivate_project_url
     }
