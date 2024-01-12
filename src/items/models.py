@@ -1,7 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse # django-hosts
+from django.utils import timezone
 from projects.models import Project
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -9,7 +11,15 @@ User = settings.AUTH_USER_MODEL
 # user.items_changed
 
 class Item(models.Model):
+    class ItemStatus(models.TextChoices):
+        PUBLISH = 'publish', 'Publish'
+        PENDING = 'pending', 'Pending'
+        DRAFT = 'draft', 'Draft'
+        ON_HOLD = 'on_hold', 'On Hold'
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=ItemStatus.choices, default=ItemStatus.DRAFT)
+    _status = models.CharField(max_length=20, choices=ItemStatus.choices,  null=True, blank=True)
+    status_changed_at = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     added_by = models.ForeignKey(User, related_name='items_added', on_delete=models.SET_NULL, null=True)
     added_by_username = models.CharField(max_length=120, null=True, blank=True)
     last_modified_by = models.ForeignKey(User, related_name='items_changed', on_delete=models.SET_NULL, null=True)
@@ -21,6 +31,9 @@ class Item(models.Model):
     def save(self, *args, **kwargs):
         if self.added_by:
             self.added_by_username= self.added_by.username
+        if self._status != self.status:
+            self._status = self.status
+            self.status_changed_at = timezone.now()
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

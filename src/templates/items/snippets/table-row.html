@@ -5,7 +5,7 @@
         {{ instance.title }}
     </th>
     <td class="px-6 py-4">
-        None
+        {{ instance.get_status_display }}
     </td>
     <td class="px-6 py-4">
         {{ instance.updated|timesince }} ago
