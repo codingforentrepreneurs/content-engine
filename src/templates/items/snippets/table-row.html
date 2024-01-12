@@ -1,3 +1,4 @@
+{% load item_status_select %}
 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
     id="item-table-row-{{ instance.id }}"
 >
@@ -5,7 +6,7 @@
         {{ instance.title }}
     </th>
     <td class="px-6 py-4">
-        {{ instance.get_status_display }}
+        {% item_status_select instance %}
     </td>
     <td class="px-6 py-4">
         {{ instance.updated|timesince }} ago
