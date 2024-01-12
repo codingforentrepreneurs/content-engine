@@ -1491,6 +1491,10 @@ input:checked + .toggle-bg {
   margin-top: 2rem;
 }
 
+.me-2 {
+  margin-inline-end: 0.5rem;
+}
+
 .block {
   display: block;
 }
@@ -2421,6 +2425,11 @@ input:checked + .toggle-bg {
 :is(.dark .dark\:focus\:ring-primary-900:focus) {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(30 58 138 / var(--tw-ring-opacity));
+}
+
+:is(.dark .dark\:focus\:ring-blue-800:focus) {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(30 66 159 / var(--tw-ring-opacity));
 }
 
 @media (min-width: 640px) {
