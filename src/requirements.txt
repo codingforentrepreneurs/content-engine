@@ -6,3 +6,5 @@ dj-database-url
 psycopg2-binary
 whitenoise
 django-htmx
+boto3 # python -> aws -> s3
+natsort

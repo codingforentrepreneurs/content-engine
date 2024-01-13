@@ -34,6 +34,9 @@ jobs:
             DJANGO_DEBUG: "1"
             DATABASE_URL: "${{ secrets.DATABASE_URL }}"
             DJANGO_SECRET_KEY: "${{ secrets.DJANGO_SECRET_KEY }}"
+            AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+            AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+            AWS_BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME }}"
           EOF
       - name: Apply K8s Manifests
         run: |
