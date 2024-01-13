@@ -1559,6 +1559,14 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
+.max-h-\[\] {
+  max-height: ;
+}
+
+.max-h-\[80vh\] {
+  max-height: 80vh;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -1601,6 +1609,10 @@ input:checked + .toggle-bg {
 
 .flex-shrink {
   flex-shrink: 1;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .-translate-x-full {
@@ -1729,6 +1741,12 @@ input:checked + .toggle-bg {
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .divide-y > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
@@ -1750,6 +1768,10 @@ input:checked + .toggle-bg {
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .whitespace-nowrap {
@@ -2537,8 +2559,16 @@ input:checked + .toggle-bg {
     width: auto;
   }
 
+  .md\:w-48 {
+    width: 12rem;
+  }
+
   .md\:max-w-screen-md {
     max-width: 768px;
+  }
+
+  .md\:grow {
+    flex-grow: 1;
   }
 
   .md\:flex-row {

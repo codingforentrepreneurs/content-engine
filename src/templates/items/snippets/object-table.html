@@ -1,6 +1,13 @@
 
 {% for object_dict in object_list %}
 
-<li>{{ object_dict.name }}</li>
+<div class="mb-5">
+    {{ object_dict.name }}
+    {% if object_dict.is_image %}
+    <img src="{{ object_dict.url }}" />
+    {% endif %}
+    <a href="{{ object_dict.download_url }}">Download</a>
+    <a href="{{ object_dict.url }}">View in Browser</a>
+</div>
 
 {% endfor %}

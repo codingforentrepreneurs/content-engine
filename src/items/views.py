@@ -1,5 +1,6 @@
 import s3
 import pathlib
+import mimetypes
 from cfehome.env import config
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
@@ -48,10 +49,39 @@ def item_files_view(request, id=None):
             size = c.get('Size')
             if size == 0:
                 continue
+            name = pathlib.Path(key).name
+            _type = None
+            try:
+                _type = mimetypes.guess_type(name)[0]
+            except:
+                pass
+            url = client.generate_presigned_url(
+                'get_object',
+                Params = {
+                    'Bucket': AWS_BUCKET_NAME,
+                    'Key': key,
+                },
+                ExpiresIn=3600,
+            )
+            download_url = client.generate_presigned_url(
+                'get_object',
+                Params = {
+                    'Bucket': AWS_BUCKET_NAME,
+                    'Key': key,
+                    'ResponseContentDisposition': 'attachment'
+                },
+                ExpiresIn=3600,
+            )
+            is_image = 'image' in str(_type)
+            
             updated = c.get('LastModified')
             data = {
                 'key': key,
                 'name': pathlib.Path(key).name,
+                'is_image': is_image,
+                'url': url,
+                'download_url': download_url,
+                'type': _type,
                 'size': size,
                 'updated': updated,
             }

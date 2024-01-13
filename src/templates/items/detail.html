@@ -3,12 +3,21 @@
 
 {% block content %}
 
-<h1>{{ instance.title }}</h1>
-<h1>{{ instance.get_prefix }}</h1>
+<div class="flex space-x-4">
+    <div class="grow">
+        <div
+            class="max-h-[80vh] overflow-y-auto" 
+            hx-get="{{ instance.get_files_url }}" 
+            hx-trigger="load"></div>
+    </div>
+    <div>
+        <h1>{{ instance.title }}</h1>
+        <h1>{{ instance.get_prefix }}</h1>
 
-<div hx-get="{{ instance.get_files_url }}" hx-trigger="load"></div>
+       
 
 
-{% include 'items/snippets/form.html' with form=form btn_label="Save" %}
-
+        {% include 'items/snippets/form.html' with form=form btn_label="Save" %}
+    </div>
+</div>
 {% endblock content %}
