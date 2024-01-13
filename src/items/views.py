@@ -1,3 +1,6 @@
+import s3
+import pathlib
+from cfehome.env import config
 from django.contrib.auth.decorators import login_required
 from django.http import QueryDict
 from django.shortcuts import redirect, render, get_object_or_404
@@ -9,6 +12,52 @@ from cfehome import http
 
 from . import forms
 from .models import Item
+
+
+AWS_ACCESS_KEY_ID=config("AWS_ACCESS_KEY_ID", default=None)
+AWS_SECRET_ACCESS_KEY=config("AWS_SECRET_ACCESS_KEY", default=None)
+AWS_BUCKET_NAME=config("AWS_BUCKET_NAME", default=None)
+
+
+
+@project_required
+@login_required
+def item_files_view(request, id=None):
+    instance = get_object_or_404(Item, id=id, project=request.project)
+    if not request.htmx:
+        detail_url = instance.get_absolute_url()
+        return redirect(detail_url)
+    template_name = 'items/snippets/object-table.html'
+    prefix = instance.get_prefix()
+    client = s3.S3Client(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            default_bucket_name=AWS_BUCKET_NAME,
+        ).client
+
+    paginator = client.get_paginator("list_objects_v2")
+    pag_gen = paginator.paginate(
+            Bucket=AWS_BUCKET_NAME,
+            Prefix=prefix
+    )
+    object_list = []
+    for page in pag_gen:
+        #print(page.get('Contents'))
+        for c in page.get('Contents', []):
+            key = c.get('Key')
+            size = c.get('Size')
+            if size == 0:
+                continue
+            updated = c.get('LastModified')
+            data = {
+                'key': key,
+                'name': pathlib.Path(key).name,
+                'size': size,
+                'updated': updated,
+            }
+            object_list.append(data)
+    return render(request, template_name, {'object_list': object_list})
+
 
 @project_required
 @login_required

@@ -25,6 +25,14 @@ class Project(models.Model):
 
     def __str__(self):
         return self.handle
+    
+    def get_prefix(self, trailing_slash=True):
+        """
+        S3 Prefix
+        """
+        if trailing_slash:
+            return f"projects/{self.id}/"
+        return f"projects/{self.id}"
 
     def get_absolute_url(self):
         return reverse("projects:detail", kwargs={"handle": self.handle})
