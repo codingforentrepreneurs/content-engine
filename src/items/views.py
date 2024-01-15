@@ -3,11 +3,13 @@ import pathlib
 import mimetypes
 from cfehome.env import config
 from django.contrib.auth.decorators import login_required
-from django.http import QueryDict
+from django.http import QueryDict, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 
 from projects import cache as projects_cache
 from projects.decorators import project_required
+
+from django_htmx.http import HttpResponseClientRedirect
 
 from cfehome import http
 
@@ -19,6 +21,30 @@ AWS_ACCESS_KEY_ID=config("AWS_ACCESS_KEY_ID", default=None)
 AWS_SECRET_ACCESS_KEY=config("AWS_SECRET_ACCESS_KEY", default=None)
 AWS_BUCKET_NAME=config("AWS_BUCKET_NAME", default=None)
 
+
+@project_required
+@login_required
+def item_file_delete_view(request, id=None, name=None):
+    instance = get_object_or_404(Item, id=id, project=request.project)
+    if not request.htmx:
+        detail_url = instance.get_absolute_url()
+        return redirect(detail_url)
+    if request.method != "POST":
+        detail_url = instance.get_absolute_url()
+        return HttpResponseClientRedirect(detail_url)
+    # modal for a confirm file name
+    prefix = instance.get_prefix()
+    client = s3.S3Client(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            default_bucket_name=AWS_BUCKET_NAME,
+        ).client
+    prefix = instance.get_prefix()
+    key = f"{prefix}{name}"
+    if key.endswith("/"):
+        key = key[:-1]
+    client.delete_object(Bucket=AWS_BUCKET_NAME, Key=key)
+    return HttpResponse(f"{name} Deleted")
 
 
 @project_required
@@ -86,7 +112,10 @@ def item_files_view(request, id=None):
                 'updated': updated,
             }
             object_list.append(data)
-    return render(request, template_name, {'object_list': object_list})
+    return render(request, template_name, 
+                    {'object_list': object_list,
+                     "instance": instance}
+                )
 
 
 @project_required
