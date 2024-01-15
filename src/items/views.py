@@ -3,11 +3,12 @@ import pathlib
 import mimetypes
 from cfehome.env import config
 from django.contrib.auth.decorators import login_required
-from django.http import QueryDict, HttpResponse
+from django.http import QueryDict, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 
 from projects import cache as projects_cache
 from projects.decorators import project_required
+from django.utils.text import slugify
 
 from django_htmx.http import HttpResponseClientRedirect
 
@@ -20,6 +21,48 @@ from .models import Item
 AWS_ACCESS_KEY_ID=config("AWS_ACCESS_KEY_ID", default=None)
 AWS_SECRET_ACCESS_KEY=config("AWS_SECRET_ACCESS_KEY", default=None)
 AWS_BUCKET_NAME=config("AWS_BUCKET_NAME", default=None)
+
+
+def filename_to_s3_filename(fname):
+    if fname is None:
+        return None
+    if fname == '':
+        return None
+    stem = pathlib.Path(fname).stem
+    suffix = pathlib.Path(fname).suffix
+    stem_clean = slugify(stem).replace('-', '_')
+    return f'{stem_clean}{suffix}'
+
+@project_required
+@login_required
+def item_upload_view(request, id=None):
+    instance = get_object_or_404(Item, id=id, project=request.project)
+    # if not request.htmx:
+    #     detail_url = instance.get_absolute_url()
+    #     return redirect(detail_url)
+    template_name = 'items/file-upload.html'
+    if request.method == "POST":
+        print(request.POST)
+        file_name = request.POST.get('file_name')
+        name = filename_to_s3_filename(file_name)
+        if name is None:
+            """
+            Invalid name, alert user
+            """
+            return JsonResponse({"url": None})
+        client = s3.S3Client(
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            default_bucket_name=AWS_BUCKET_NAME,
+        ).client
+        prefix = instance.get_prefix()
+        key = f"{prefix}{name}"
+        url = client.generate_presigned_url('put_object', Params={"Bucket": AWS_BUCKET_NAME, "Key": key}, ExpiresIn=3600)
+        return JsonResponse({"url": url, 'filename': name})
+    return render(request, template_name, 
+                    {
+                     "instance": instance}
+                )
 
 
 @project_required

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="flex space-x-4">
+    <div class="grow">
+        <form method="post" id="upload-form">
+            <input type="hidden" value="{{ request.build_absolute_uri }}" name="endpoint" />
+            <input type="file" id="file-id" name="file" />
+            <button type="submit" id="upload-button" >Upload to S3</button>
+        </form>
+        
+    </div>
+</div>
+
+<script>
+    const uploadForm = document.getElementById('upload-form')
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", handleSubmitEvent)
+    }
+   
+    function handleSubmitEvent(event) {
+        event.preventDefault()
+        const fileInput = uploadForm.querySelector('[name="file"]')
+        const endpointInput = uploadForm.querySelector('[name="endpoint"]')
+        const signingEndpoint = endpointInput.value
+        const file = fileInput.files[0]
+        const hxHeaders = document.body.getAttribute('hx-headers')
+        const csrfToken = JSON.parse(hxHeaders)['X-CSRFToken'];
+        presignFileForUpload(file, signingEndpoint, csrfToken)
+    }
+
+    function resetForm(){
+        const uploadForm = document.getElementById('upload-form')
+        uploadForm.reset()
+    }
+ 
+    function handleS3Upload(file, data){
+        const fileName = data.filename ? data.filename : file.name
+        const newFileObject = new File([file], fileName, {type: file.type})
+        console.log("ready for s3", data, newFileObject)
+        resetForm()
+
+    }
+    function presignFileForUpload(file, endpoint, csrfToken) {
+        const fileName =  file.name 
+        const formData = new FormData()
+        formData.append("file_name", fileName)
+        fetch(endpoint,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFTOKEN": csrfToken,
+            }
+        }).then(response=>response.json())
+        .then(data=>{
+            handleS3Upload(file, data)
+        }).catch(err=>console.log('err', err))
+    }
+</script>
+{% endblock content %}
