@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from cfehome.utils.generators import unique_slugify
 from . import validators
@@ -15,6 +16,24 @@ class ProjectUser(models.Model):
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     active = models.BooleanField(default=True)
+    # edit = models.BooleanField(default=True)
+
+class ProjectQuerySet(models.QuerySet):
+    def has_access(self, user=None):
+        if user is None:
+            return self.none()
+        return self.filter(
+            Q(owner=user) |
+            Q(projectuser__user=user, 
+              projectuser__active=True)
+        )
+    
+class ProjectManager(models.Manager):
+    def get_queryset(self):
+        return ProjectQuerySet(self.model, using=self._db)
+
+    def has_access(self, user=None):
+        return self.get_queryset().has_access(user=user)
 
 class Project(models.Model):
     owner = models.ForeignKey(User, null=True, related_name='owned_projects', on_delete=models.SET_NULL)
@@ -32,6 +51,8 @@ class Project(models.Model):
 
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    objects = ProjectManager()
 
     def __str__(self):
         return self.handle
