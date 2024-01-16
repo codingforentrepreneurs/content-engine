@@ -5,9 +5,10 @@
 
 <div class="flex space-x-4">
     <div class="grow">
+        <div class="hidden upload-progress-display">Loading</div>
         <form method="post" id="upload-form">
             <input type="hidden" value="{{ request.build_absolute_uri }}" name="endpoint" />
-            <input type="file" id="file-id" name="file" />
+            <input type="file" id="file-id" name="file" multiple />
             <button type="submit" id="upload-button" >Upload to S3</button>
         </form>
         
@@ -19,6 +20,19 @@
     if (uploadForm) {
         uploadForm.addEventListener("submit", handleSubmitEvent)
     }
+
+    function toggleLoadingDisplay (isLoading){
+        const loadingDisplayElement = document.getElementsByClassName('upload-progress-display')
+        for (let el of loadingDisplayElement) {
+            if (isLoading) {
+                el.classList.remove('hidden')
+            } else {
+                el.classList.add('hidden')
+            }
+
+           
+        }
+    }
    
     function handleSubmitEvent(event) {
         event.preventDefault()
@@ -28,22 +42,65 @@
         const file = fileInput.files[0]
         const hxHeaders = document.body.getAttribute('hx-headers')
         const csrfToken = JSON.parse(hxHeaders)['X-CSRFToken'];
-        presignFileForUpload(file, signingEndpoint, csrfToken)
+        let completedFiles = []
+        for (let file of fileInput.files) {
+            toggleLoadingDisplay(true)
+            presignFileForUpload(file, signingEndpoint, csrfToken, (data)=>{
+                handleS3Upload(file, data, (progressEvent)=>{
+                    console.log(progressEvent)
+                    if (progressEvent.loaded/progressEvent.total > 0.98) {
+                        completedFiles.push(file)
+                    }
+                    if (completedFiles.length == fileInput.files.length) {
+                        resetForm()
+                    }
+                })
+            })
+        }
     }
 
     function resetForm(){
         const uploadForm = document.getElementById('upload-form')
+        toggleLoadingDisplay(false)
         uploadForm.reset()
     }
  
-    function handleS3Upload(file, data){
+    function handleS3Upload(file, data, callback){
         const fileName = data.filename ? data.filename : file.name
         const newFileObject = new File([file], fileName, {type: file.type})
         console.log("ready for s3", data, newFileObject)
-        resetForm()
+        const url = data.url ? data.url : null
+        if (!url) {
+            alert("Error with your request, please try again.")
+            return 
+        } else {
+            // perform the upload to s3 bucket
+            const xhr = new XMLHttpRequest()
+            xhr.open('PUT', url, true)
+            xhr.upload.onprogress = (event) => {
+                callback(event)
+                // setFileUploadState(event)
+            }
+            xhr.onload = function() {
+                // console.log('no error', xhr.status, xhr)
+                // if (xhr.status === 200) {
+                //     resetForm()
+                // } else {
+                //     alert(xhr.statusText)
+                // }
+               
+            }
+            xhr.onerror = function() {
+                // console.log('error', xhr.status)
+                resetForm()
+            } 
+            xhr.setRequestHeader('Content-Type', newFileObject.type)
+            xhr.send(newFileObject)
+            
+        }
 
     }
-    function presignFileForUpload(file, endpoint, csrfToken) {
+    function presignFileForUpload(file, endpoint, csrfToken, callback) {
         const fileName =  file.name 
         const formData = new FormData()
         formData.append("file_name", fileName)
@@ -56,7 +113,7 @@
             }
         }).then(response=>response.json())
         .then(data=>{
-            handleS3Upload(file, data)
+            callback(data)
         }).catch(err=>console.log('err', err))
     }
 </script>

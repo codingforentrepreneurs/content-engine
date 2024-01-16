@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import boto3
-
+from botocore.client import Config
 
 @dataclass
 class S3Client:
@@ -25,7 +25,8 @@ class S3Client:
         return boto3.client(
             's3',
             aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key
+            aws_secret_access_key=self.aws_secret_access_key,
+            config=Config(signature_version='s3v4')
         )
 
     # def list_objects(self):
