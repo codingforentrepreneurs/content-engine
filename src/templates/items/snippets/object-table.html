@@ -1,12 +1,35 @@
 
-{% for object_dict in object_list %}
 
-<div class="mb-5" id="object-{{ forloop.counter }}">
-    {{ object_dict.name }}
-    {% if object_dict.is_image %}
-    <img src="{{ object_dict.url }}" />
-    {% endif %}
-    <a class="hover:pointer font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ object_dict.download_url }}">Download</a>
+
+
+
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    File
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            
+   
+
+{% for object_dict in object_list %}
+            <tr class="bg-white dark:bg-gray-800">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {% if object_dict.is_image %}
+    <img class="max-h-10" src="{{ object_dict.url }}" />
+    {% endif %}  {{ object_dict.name }}
+   
+                </th>
+
+                <td class="px-6 py-4">
+                    <a class="hover:pointer font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ object_dict.download_url }}">Download</a>
     <a class="hover:pointer font-medium text-gray-800 dark:text-gray-300 hover:underline" href="{{ object_dict.url }}">View in Browser</a>
     {% if instance %}
     <button  
@@ -18,6 +41,10 @@
         Delete
     </button>
     {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-{% endfor %}

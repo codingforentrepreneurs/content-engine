@@ -41,6 +41,8 @@ def item_upload_view(request, id=None):
     #     detail_url = instance.get_absolute_url()
     #     return redirect(detail_url)
     template_name = 'items/file-upload.html'
+    if request.htmx:
+        template_name = 'items/snippets/upload.html'
     if request.method == "POST":
         print(request.POST)
         file_name = request.POST.get('file_name')

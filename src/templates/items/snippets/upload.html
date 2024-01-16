@@ -1,0 +1,123 @@
+<div class="space-y-4">
+    <div class="hidden upload-progress-display">Loading</div>
+    <form class="space-y-2" method="post" id="upload-form">
+        <input type="hidden" value="{{ instance.get_upload_url }}" name="endpoint" />
+        <input type="hidden" value="{{ instance.get_absolute_url }}" name="next" />
+
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file-id">Upload files</label>
+    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
+    required="required"
+    id="file-id" name='file' type="file" multiple>
+
+    <button type="submit" id="upload-button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Start Upload</button>
+   
+    </form>
+</div>
+
+
+<script>
+    const uploadForm = document.getElementById('upload-form')
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", handleSubmitEvent)
+    }
+
+    function toggleLoadingDisplay (isLoading){
+        const loadingDisplayElement = document.getElementsByClassName('upload-progress-display')
+        for (let el of loadingDisplayElement) {
+            if (isLoading) {
+                el.classList.remove('hidden')
+            } else {
+                el.classList.add('hidden')
+            }
+
+           
+        }
+    }
+   
+    function handleSubmitEvent(event) {
+        event.preventDefault()
+        const fileInput = uploadForm.querySelector('[name="file"]')
+        const endpointInput = uploadForm.querySelector('[name="endpoint"]')
+        const nextUrl = uploadForm.querySelector('[name="next"]')
+        const signingEndpoint = endpointInput.value
+        const file = fileInput.files[0]
+        const hxHeaders = document.body.getAttribute('hx-headers')
+        const csrfToken = JSON.parse(hxHeaders)['X-CSRFToken'];
+        let completedFiles = []
+        for (let file of fileInput.files) {
+            toggleLoadingDisplay(true)
+            presignFileForUpload(file, signingEndpoint, csrfToken, (data)=>{
+                handleS3Upload(file, data, (progressEvent)=>{
+                    console.log(progressEvent)
+                    if (progressEvent.loaded/progressEvent.total > 0.98) {
+                        completedFiles.push(file)
+                    }
+                    if (completedFiles.length == fileInput.files.length) {
+                        resetForm()
+                        if (nextUrl) {
+                            window.location.replace(nextUrl.value)
+                        }
+                    }
+                })
+            })
+        }
+    }
+
+    function resetForm(){
+        const uploadForm = document.getElementById('upload-form')
+        toggleLoadingDisplay(false)
+        uploadForm.reset()
+    }
+ 
+    function handleS3Upload(file, data, callback){
+        const fileName = data.filename ? data.filename : file.name
+        const newFileObject = new File([file], fileName, {type: file.type})
+        console.log("ready for s3", data, newFileObject)
+        const url = data.url ? data.url : null
+        if (!url) {
+            alert("Error with your request, please try again.")
+            return 
+        } else {
+            // perform the upload to s3 bucket
+            const xhr = new XMLHttpRequest()
+            xhr.open('PUT', url, true)
+            xhr.upload.onprogress = (event) => {
+                callback(event)
+                // setFileUploadState(event)
+            }
+            xhr.onload = function() {
+                // console.log('no error', xhr.status, xhr)
+                // if (xhr.status === 200) {
+                //     resetForm()
+                // } else {
+                //     alert(xhr.statusText)
+                // }
+               
+            }
+            xhr.onerror = function() {
+                // console.log('error', xhr.status)
+                resetForm()
+            } 
+            xhr.setRequestHeader('Content-Type', newFileObject.type)
+            xhr.send(newFileObject)
+            
+        }
+
+    }
+    function presignFileForUpload(file, endpoint, csrfToken, callback) {
+        const fileName =  file.name 
+        const formData = new FormData()
+        formData.append("file_name", fileName)
+        fetch(endpoint,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFTOKEN": csrfToken,
+            }
+        }).then(response=>response.json())
+        .then(data=>{
+            callback(data)
+        }).catch(err=>console.log('err', err))
+    }
+</script>
