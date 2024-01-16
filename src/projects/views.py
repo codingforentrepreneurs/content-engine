@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from projects.models import Project, AnonymousProject
 
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required as login_required
+
 from django.shortcuts import redirect, render, get_object_or_404
 
 from . import forms

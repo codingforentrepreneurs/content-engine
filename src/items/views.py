@@ -2,7 +2,8 @@ import s3
 import pathlib
 import mimetypes
 from cfehome.env import config
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required as login_required
 from django.http import QueryDict, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse 

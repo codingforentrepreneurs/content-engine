@@ -9,8 +9,18 @@ class AnonymousProject():
     value = None
     is_activated = False
 
+class ProjectUser(models.Model):
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    active = models.BooleanField(default=True)
+
 class Project(models.Model):
     owner = models.ForeignKey(User, null=True, related_name='owned_projects', on_delete=models.SET_NULL)
+    users = models.ManyToManyField(User, blank=True, 
+                                related_name='projects',
+                                through=ProjectUser)
     title = models.CharField(max_length=120, null=True)
     description = models.TextField(blank=True, null=True)
     handle = models.SlugField(null=True, blank=True, unique=True, 
