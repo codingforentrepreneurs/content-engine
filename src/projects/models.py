@@ -27,6 +27,16 @@ class ProjectQuerySet(models.QuerySet):
             Q(projectuser__user=user, 
               projectuser__active=True)
         )
+    def has_access_by_username(self, username=None):
+        # Added off video recordings
+        # for the project cache
+        if username is None:
+            return self.none()
+        return self.filter(
+            Q(owner__username__iexact=username) |
+            Q(projectuser__user__username__iexact=username, 
+              projectuser__active=True)
+        )
     
 class ProjectManager(models.Manager):
     def get_queryset(self):
