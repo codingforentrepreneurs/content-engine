@@ -45,10 +45,10 @@ class ProjectManager(models.Manager):
     def has_access(self, user=None):
         return self.get_queryset().has_access(user=user)
 
-    def has_access_by_username(self, user=None):
+    def has_access_by_username(self, username=None):
         # Added off video recordings
         # for the project cache
-        return self.get_queryset().has_access_by_username(user=user)
+        return self.get_queryset().has_access_by_username(username)
 
 class Project(models.Model):
     owner = models.ForeignKey(User, null=True, related_name='owned_projects', on_delete=models.SET_NULL)
