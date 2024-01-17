@@ -20,7 +20,7 @@
    
 
 {% for object_dict in object_list %}
-            <tr class="bg-white dark:bg-gray-800">
+            <tr class="bg-white dark:bg-gray-800" id="object-{{ forloop.counter }}">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {% if object_dict.is_image %}
     <img class="max-h-10" src="{{ object_dict.url }}" />
